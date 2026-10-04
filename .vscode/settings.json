@@ -1,0 +1,36 @@
+{
+  // Code Runner ("Run Code" button) settings
+  //
+  // STUDENTS: Uncomment ONE "cpp" line below, the one that matches your
+  // operating system. To uncomment a line, delete the // at its start.
+  // Leave the other line commented out.
+  "code-runner.executorMap": {
+
+    // ----- macOS / Linux (and Windows with Git Bash) -----
+    // Compiles every .cpp file in this folder and then runs the program.
+    // Windows students: if your default VS Code terminal is Git Bash
+    // (or another bash shell), use THIS line, not the Windows line below.
+    // Git Bash users must ALSO uncomment the "code-runner.terminalRoot"
+    // line near the bottom of this file.
+    // "cpp": "cd $dir && g++ -std=c++17 -g *.cpp -o main && ./main"
+
+    // ----- Windows (PowerShell) -----
+    // This command assumes PowerShell is your default VS Code terminal
+    // (the Windows default). It will NOT work in Command Prompt (cmd).
+    // To check or change it: Ctrl+Shift+P -> "Terminal: Select Default
+    // Profile" -> PowerShell.
+    // Requires g++ (MinGW-w64, e.g. installed through MSYS2) on your PATH.
+    // IMPORTANT: Windows cannot use *.cpp here. You must list EVERY .cpp
+    // file in the project by name. If you add a new .cpp file, add it to
+    // this line too.
+    // "cpp": "cd $dir; g++ -std=c++17 -g main.cpp ArrayInt.cpp -o main.exe; if ($?) { .\\main.exe }"
+
+  },
+  // Windows + Git Bash ONLY: uncomment the next line so Code Runner gives
+  // bash a path it understands (/c/Users/... instead of C:\Users\...).
+  // "code-runner.terminalRoot": "/",
+
+  "code-runner.runInTerminal": true,
+  "code-runner.saveAllFilesBeforeRun": true,
+  "code-runner.clearPreviousOutput": true
+}

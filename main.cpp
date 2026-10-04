@@ -15,6 +15,27 @@
 #include <fstream>
 #include <algorithm>
 
+// BEFORE YOU RUN: To use the "Run Code" button in VS Code, open
+// .vscode/settings.json and uncomment the "cpp" line for your
+// operating system (macOS/Linux or Windows). Follow the directions
+// in that file. The button will not work until you do this.
+//
+// AS YOU WORK THROUGH THE LAB: Each challenge has a matching test
+// below. When you start a new challenge, uncomment its #define
+// (delete the // at the start of the line). The challenges are
+// cumulative, so leave every earlier test uncommented too.
+//   ARRConstructor   -> TEST_CONSTRUCTOR (already on)
+//   ARRAppend        -> TEST_APPEND
+//   ARRMakeRoom      -> TEST_MAKE_ROOM
+//   ARRFind          -> TEST_FIND
+//   ARRLargest       -> TEST_LARGEST
+//   ARRInsertRemove  -> TEST_INSERT_REMOVE
+//   ARRMix           -> TEST_MIX
+//   ARRThink         -> TEST_THINK
+// Starting with TEST_APPEND, the tests read values from a file
+// named "input", which must be in the same folder as this file and
+// should NOT have an extension (e.g., no .txt ending).
+
 #define TEST_CONSTRUCTOR
 //#define TEST_APPEND
 //#define TEST_MAKE_ROOM
@@ -27,7 +48,7 @@
 //#define TEST_THINK
 
 // Read in values from file
-void readInVals(int* arr, int numElems, int skipLines);
+void readInVals(int* arr, int numElems);
 
 
 int main(int argc, const char *argv[]) {
@@ -51,7 +72,7 @@ int main(int argc, const char *argv[]) {
   ArrayInt appends;
   const int NUM_APPENDS = 5;
   int appendVals[NUM_APPENDS];
-  readInVals(appendVals, NUM_APPENDS, 0);
+  readInVals(appendVals, NUM_APPENDS);
 
   for (int i = 0; i < NUM_APPENDS; i++) {
     appends.append(appendVals[i]);
@@ -95,7 +116,7 @@ int main(int argc, const char *argv[]) {
   const int START = 7;
   const int UPDATE = 12;
   int roomVals[UPDATE];
-  readInVals(roomVals, UPDATE, 1);
+  readInVals(roomVals, UPDATE);
 
   std::cout << "\n\nTESTING resize, auto expansion on appends, and listElements\n\n";
 
@@ -127,7 +148,7 @@ int main(int argc, const char *argv[]) {
 
   ArrayInt findRemove;
   int findRemVals[FIND_COUNT];
-  readInVals(findRemVals, FIND_COUNT, 2);
+  readInVals(findRemVals, FIND_COUNT);
   for (int i = 0; i < FIND_COUNT; i++) {
     findRemove.append(findRemVals[i]);
   }
@@ -207,7 +228,7 @@ int main(int argc, const char *argv[]) {
   std::cout << "\n\nTESTING insertAt and removeAt\n\n";
 
   int insRemVals[BEGIN];
-  readInVals(insRemVals, BEGIN, 3);
+  readInVals(insRemVals, BEGIN);
   ArrayInt insertRemove;
   for (int i = 0; i < BEGIN; i++) {
     insertRemove.append(insRemVals[i]);
@@ -312,7 +333,7 @@ int main(int argc, const char *argv[]) {
   ArrayInt think;
   const int NUM_THINK = 10;
   int thinkVals[NUM_THINK];
-  readInVals(thinkVals, NUM_THINK, 4);
+  readInVals(thinkVals, NUM_THINK);
 
   std::sort(thinkVals, thinkVals + NUM_THINK, std::greater<int>());
   std::cout << "  After THINK expected:";
@@ -328,30 +349,28 @@ int main(int argc, const char *argv[]) {
 }
 
 
-// Read numElems values form inf and store them in arr
-void readInVals(int* arr, int numElems, int skipLines) {
-  std::ifstream inputFile("input");
-  if (!inputFile) {
-    std::cerr << "Error opening file!\n";
-    exit(1);
+// Reads numElems values, in order, from a file named "input" in the
+// same directory as this program if it exists. Otherwise, it reads
+// from stdin. All data is read in on the first call. Each subsequent
+// call returns the next numElems values in sequence, continuing from
+// wherever the previous call left off.
+void readInVals(int* arr, int numElems) {
+  static std::ifstream inputFile;
+  static bool usingFile = false;
+  static bool resolved = false;
+
+  if (!resolved) {
+    resolved = true;
+    inputFile.open("input");
+    usingFile = inputFile.is_open();
   }
 
-  // Skip the specified number of lines
-  std::string temp;
-  for (int i = 0; i < skipLines; i++) {
-    if (!std::getline(inputFile, temp)) {
-      std::cerr << "Error: Reached end of file while skipping lines!\n";
-      exit(1);
-    }
-  }
-
-  // Read values into the array
   for (int i = 0; i < numElems; i++) {
-    if (!(inputFile >> arr[i])) {
-      std::cerr << "Error reading values from file!\n";
+    bool ok = usingFile ? static_cast<bool>(inputFile >> arr[i]) :
+                          static_cast<bool>(std::cin >> arr[i]);
+    if (!ok) {
+      std::cerr << "Error reading values from input!\n";
       exit(1);
     }
   }
-
-  inputFile.close();
 }

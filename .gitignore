@@ -1,0 +1,6 @@
+# Compiled program (macOS/Linux and Windows)
+main
+main.exe
+
+# macOS debug symbols (created by g++ -g)
+*.dSYM/
